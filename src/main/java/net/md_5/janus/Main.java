@@ -26,12 +26,11 @@ public class Main extends JavaPlugin implements Listener {
     private static final int FRAME = Material.OBSIDIAN.getId();
     private static final int PORTAL = Material.PORTAL.getId();
     private static final int SIGN = Material.WALL_SIGN.getId();
-    private static final String IDENTIFIER = "[server]";
+    private static final String IDENTIFIER = "[world]";
     private boolean blockMessages = false;
 
     @Override
     public void onEnable() {
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getPluginManager().registerEvents(this, this);
         getConfig().addDefault("blockMessages", blockMessages);
         getConfig().options().copyDefaults(true);
@@ -73,24 +72,22 @@ public class Main extends JavaPlugin implements Listener {
                         Sign sign = (Sign) relative.getState();
                         if (sign.getLine(0).equals(IDENTIFIER)) {
                             //
-                            event.setCancelled(true);
-                            Location location = event.getPlayer().getLocation();
-                            float yaw = location.getYaw();
-                            if ((yaw += 180) > 360) {
-                                yaw -= 360;
-                            }
-                            location.setYaw(yaw);
-                            event.getPlayer().teleport(location);
-                            ByteArrayOutputStream b = new ByteArrayOutputStream();
-                            DataOutputStream out = new DataOutputStream(b);
-                            try {
-                                out.writeUTF("Connect");
-                                out.writeUTF(sign.getLine(1));
-                            } catch (IOException ex) {
-                                // Impossible
+
+                            if (getServer().getWorld(sign.getLine(1)) != null) {
+                                event.setCancelled(true);
+                                Location location = event.getPlayer().getLocation();
+                                float yaw = location.getYaw();
+                                if ((yaw += 180) > 360) {
+                                    yaw -= 360;
+                                }
+                                location.setYaw(yaw);
+                                event.getPlayer().teleport(location);
+
+                                Location spawn = getServer().getWorld(sign.getLine(1)).getSpawnLocation();
+                                event.getPlayer().teleport(spawn);
                             }
 
-                            event.getPlayer().sendPluginMessage(this, "BungeeCord", b.toByteArray());
+
                             break;
                             //
                         }
