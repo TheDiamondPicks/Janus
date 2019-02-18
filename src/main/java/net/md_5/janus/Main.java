@@ -75,16 +75,16 @@ public class Main extends JavaPlugin implements Listener {
 
                             if (getServer().getWorld(sign.getLine(1)) != null) {
                                 event.setCancelled(true);
-                                Location location = event.getPlayer().getLocation();
-                                float yaw = location.getYaw();
-                                if ((yaw += 180) > 360) {
-                                    yaw -= 360;
-                                }
-                                location.setYaw(yaw);
-                                event.getPlayer().teleport(location);
+//                                Location location = event.getPlayer().getLocation();
+//                                float yaw = location.getYaw();
+//                                if ((yaw += 180) > 360) {
+//                                    yaw -= 360;
+//                                }
+//                                location.setYaw(yaw);
+//                                event.getPlayer().teleport(location);
 
-                                Location spawn = getServer().getWorld(sign.getLine(1)).getSpawnLocation();
-                                event.getPlayer().teleport(spawn);
+                                String spawn = sign.getLine(1);
+                                event.getPlayer().performCommand("server " + spawn);
                             }
 
 
